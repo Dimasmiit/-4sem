@@ -1,34 +1,28 @@
 #include <iostream>
 #include <vector>
-using namespace std;
+#include <iterator>
+#include <algorithm>
 
 int main() {
-    vector<int> V;
-    int n;
+    std::vector<int> V;
 
-    cout << "Введите количество элементов (чётное число): ";
-    cin >> n;
+    std::copy(std::istream_iterator<int>(std::cin),
+              std::istream_iterator<int>(),
+              std::back_inserter(V));
 
-    if (n % 2 != 0) {
-        cout << "Ошибка: количество элементов должно быть чётным.\n";
+    if (V.size() % 2 != 0) {
+        std::cerr << "Error: the number of elements must be even.\n";
         return 1;
     }
 
-    cout << "Введите " << n << " элементов: ";
-    for (int i = 0; i < n; ++i) {
-        int x;
-        cin >> x;
-        V.push_back(x);
-    }
+    auto mid = V.size() / 2;
 
-    size_t mid = V.size() / 2;           
-    V.insert(V.begin() + mid, 5, 0);     
+    V.insert(V.begin() + mid, 5, 0);
 
-    cout << "Результат: ";
-    for (int val : V) {
-        cout << val << " ";
-    }
-    cout << endl;
+    std::for_each(V.begin(), V.end(), [](int x) {
+        std::cout << x << ' ';
+    });
+    std::cout << std::endl;
 
     return 0;
 }
