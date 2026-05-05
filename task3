@@ -7,15 +7,28 @@
 using namespace std;
 
 int main() {
-    vector<int> V = {9, 2, 7, 2, 5, 9, 1, 5, 3};
+    size_t n;
+    cout << "Enter the number of vector elements: ";
+    cin >> n;
+
+    vector<int> V(n);
+    cout << "Enter " << n << " integers number: ";
+    for (auto& x : V) cin >> x;
 
     set<int> distinct_sorted(V.begin(), V.end());
 
-    auto first_rev = next(distinct_sorted.rbegin());
-    auto last_rev  = prev(distinct_sorted.rend());
+    if (distinct_sorted.size() < 3) {
+        cout << "Error: there are less than three distinct numbers in the vector. "
+                "Unable to exclude min and max.\n";
+        return 1;
+    }
+
+    auto first_rev = next(distinct_sorted.rbegin());  
+    auto last_rev  = prev(distinct_sorted.rend());    
 
     copy(first_rev, last_rev,
-              ostream_iterator<int>(cout, " "));
+         ostream_iterator<int>(cout, " "));
+    cout << endl;
 
     return 0;
 }
