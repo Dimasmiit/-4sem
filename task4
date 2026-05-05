@@ -1,23 +1,34 @@
 #include <algorithm>
-#include <functional> 
+#include <functional>
 #include <iostream>
 #include <vector>
 
 using namespace std;
+using namespace std::placeholders;  
 
 int main() {
-    const int K = 3;
-    vector<int> V1 = {1, 2, 3, 4};
-    vector<int> V2 = {5, 6, 7, 8}; 
+    int K;
+    cout << "Enter const K: ";
+    cin >> K;
+
+    size_t n;
+    cout << "Enter the size of the vectorsв: ";
+    cin >> n;
+
+    vector<int> V1(n), V2(n);
+    cout << "Enter " << n << " elements V1: ";
+    for (auto& x : V1) cin >> x;
+    cout << "Enter " << n << " elements V2: ";
+    for (auto& x : V2) cin >> x;
 
     transform(V1.begin(), V1.end(),   
-                   V2.begin(),             
-                   V1.begin(),             
-                   bind(plus<>(),                       
-                             bind(multiplies<>(),       
-                                       placeholders::_1,    
-                                       K),                       
-                             placeholders::_2));             
+              V2.begin(),              
+              V1.begin(),              
+              bind(plus<>(),          
+                   bind(multiplies<>(), _1, K),
+                   _2));
 
+    cout << "Result (V1[i]*K + V2[i]): ";
     for (int x : V1) cout << x << ' ';
+    cout << endl;
 }
