@@ -12,8 +12,8 @@ int main() {
     cin >> n;
 
     vector<int> V(n);
-    cout << "Enter " << n << " integers number: ";
-    for (auto& x : V) cin >> x;
+    cout << "Enter " << n << " integers: ";
+    copy_n(istream_iterator<int>(cin), n, V.begin());
 
     set<int> distinct_sorted(V.begin(), V.end());
 
@@ -26,8 +26,7 @@ int main() {
     auto first_rev = next(distinct_sorted.rbegin());  
     auto last_rev  = prev(distinct_sorted.rend());    
 
-    copy(first_rev, last_rev,
-         ostream_iterator<int>(cout, " "));
+    copy(first_rev, last_rev, ostream_iterator<int>(cout, " "));
     cout << endl;
 
     return 0;
