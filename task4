@@ -2,9 +2,10 @@
 #include <functional>
 #include <iostream>
 #include <vector>
+#include <iterator>   
 
 using namespace std;
-using namespace std::placeholders;  
+using namespace std::placeholders;
 
 int main() {
     int K;
@@ -12,23 +13,27 @@ int main() {
     cin >> K;
 
     size_t n;
-    cout << "Enter the size of the vectorsв: ";
+    cout << "Enter the size of the vectors: ";
     cin >> n;
 
     vector<int> V1(n), V2(n);
-    cout << "Enter " << n << " elements V1: ";
-    for (auto& x : V1) cin >> x;
-    cout << "Enter " << n << " elements V2: ";
-    for (auto& x : V2) cin >> x;
 
-    transform(V1.begin(), V1.end(),   
-              V2.begin(),              
-              V1.begin(),              
-              bind(plus<>(),          
+    cout << "Enter " << n << " elements V1: ";
+    copy_n(istream_iterator<int>(cin), n, V1.begin());
+
+    cout << "Enter " << n << " elements V2: ";
+    copy_n(istream_iterator<int>(cin), n, V2.begin());
+
+    transform(V1.begin(), V1.end(),
+              V2.begin(),
+              V1.begin(),
+              bind(plus<>(),
                    bind(multiplies<>(), _1, K),
                    _2));
 
     cout << "Result (V1[i]*K + V2[i]): ";
-    for (int x : V1) cout << x << ' ';
+    copy(V1.begin(), V1.end(), ostream_iterator<int>(cout, " "));
     cout << endl;
+
+    return 0;
 }
