@@ -2,7 +2,7 @@
 #include <functional>
 #include <iostream>
 #include <vector>
-#include <iterator>   
+#include <iterator>
 
 using namespace std;
 using namespace std::placeholders;
@@ -12,17 +12,16 @@ int main() {
     cout << "Enter const K: ";
     cin >> K;
 
-    size_t n;
-    cout << "Enter the size of the vectors: ";
-    cin >> n;
+    vector<int> all_numbers((istream_iterator<int>(cin)), istream_iterator<int>());
 
-    vector<int> V1(n), V2(n);
+    if (all_numbers.size() % 2 != 0) {
+        cerr << "Error: the total number of elements must be even to split into two vectors of equal size.\n";
+        return 1;
+    }
 
-    cout << "Enter " << n << " elements V1: ";
-    copy_n(istream_iterator<int>(cin), n, V1.begin());
-
-    cout << "Enter " << n << " elements V2: ";
-    copy_n(istream_iterator<int>(cin), n, V2.begin());
+    size_t half = all_numbers.size() / 2;
+    vector<int> V1(all_numbers.begin(), all_numbers.begin() + half);
+    vector<int> V2(all_numbers.begin() + half, all_numbers.end());
 
     transform(V1.begin(), V1.end(),
               V2.begin(),
