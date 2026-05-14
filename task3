@@ -1,0 +1,27 @@
+#include <iostream>
+#include <vector>
+#include <set>
+#include <algorithm>
+#include <iterator>
+
+using namespace std;
+
+int main() {
+    vector<int> V((istream_iterator<int>(cin)), istream_iterator<int>());
+
+    set<int> distinct_sorted(V.begin(), V.end());
+
+    if (distinct_sorted.size() < 3) {
+        cout << "Error: there are less than three distinct numbers in the vector. "
+                "Unable to exclude min and max.\n";
+        return 1;
+    }
+
+    auto first_rev = next(distinct_sorted.rbegin());
+    auto last_rev  = prev(distinct_sorted.rend());
+
+    copy(first_rev, last_rev, ostream_iterator<int>(cout, " "));
+    cout << endl;
+
+    return 0;
+}
