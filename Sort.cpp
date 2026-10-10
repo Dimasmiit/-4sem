@@ -8,7 +8,7 @@ using namespace std;
 long long insertionSort(int a[], const int n) 
 {
     long long cmp = 0;
-    for ( size_t int i = 1; i < n; ++i) 
+    for ( size_t i = 1; i < n; ++i) 
     {
         int key = a[i];
         int j = i - 1;
@@ -30,10 +30,10 @@ long long insertionSort(int a[], const int n)
 long long selectionSort(int a[], const int n) 
 {
     long long cmp = 0;
-    for ( size_t  int i = 0; i < n - 1; ++i) 
+    for ( size_t i = 0; i < n - 1; ++i) 
     {
         int minIdx = i;
-        for ( size_t int j = i + 1; j < n; ++j) 
+        for ( size_t j = i + 1; j < n; ++j) 
         {
             ++cmp;
             if (a[j] < a[minIdx]) 
@@ -50,26 +50,33 @@ long long selectionSort(int a[], const int n)
 }
 
 // Сортировка Хоара 
-int partitionHoare(int a[], int lo, int hi, long long &cmp) 
-{
-    int pivot = a[(lo + hi) / 2];
-    int i = lo - 1;
-    int j = hi + 1;
-    while (true) 
-    {
-        do { ++i; ++cmp; } while (a[i] < pivot);
-        do { --j; ++cmp; } while (a[j] > pivot);
-        if (i >= j) return j;
-        swap(a[i], a[j]);
+int partitionHoare(int a[], int lo, int hi, long long &cmp) {
+    int mid = lo + (hi - lo) / 2;    
+    int pivot = a[mid];
+
+    swap(a[mid], a[hi]);
+
+    int i = lo;                      
+    for (int j = lo; j < hi; ++j) {
+        ++cmp;
+        if (a[j] <= pivot) {
+            swap(a[i], a[j]);
+            ++i;
+        }
     }
+
+    swap(a[i], a[hi]);
+
+    return i;
 }
 
-void quickSortHoare(int a[], int lo, int hi, long long &cmp) 
-{
+void quickSortHoare(int a[], int lo, int hi, long long &cmp) {
     if (lo >= hi) return;
+
     int p = partitionHoare(a, lo, hi, cmp);
-    quickSortHoare(a, lo, p, cmp);
-    quickSortHoare(a, p + 1, hi, cmp);
+
+    quickSortHoare(a, lo, p - 1, cmp);
+    quickSortHoare(a, p + 1, hi, cmp);   
 }
 
 // Генерация массива 
@@ -79,7 +86,7 @@ int* generateArray(const int n, const int minVal,  const int maxVal)
     random_device rd;
     mt19937 gen(rd());
     uniform_int_distribution<int> dist(minVal, maxVal);
-    for ( size_t  int i = 0; i < n; ++i)
+    for ( size_t i = 0; i < n; ++i)
         a[i] = dist(gen);
     return a;
 }
@@ -88,13 +95,13 @@ void printArray(int a[], const int n, const int limit = 30)
 {
     if (n <= limit) 
     {
-        for ( size_t  int i = 0; i < n; ++i) 
+        for ( size_t i = 0; i < n; ++i) 
         cout << a[i] << " ";
         cout << "\n";
     } 
     else 
     {
-        for ( size_t  int i = 0; i < limit; ++i) cout << a[i] << " ";
+        for ( size_t i = 0; i < limit; ++i) cout << a[i] << " ";
         cout << "... (всего " << n << " элементов)\n";
     }
 }
@@ -120,7 +127,6 @@ int main()
     cout << "\nИсходный массив: ";
     printArray(original, n);
 
-    // Считаем время + сравнения
     memcpy(work, original, n * sizeof(int));
     long long cmpInsertion = insertionSort(work, n);
 
