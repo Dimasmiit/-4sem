@@ -50,27 +50,41 @@ long long selectionSort(int a[], const int n)
 }
 
 // Сортировка Хоара 
-int partitionHoare(int a[], int lo, int hi, long long &cmp) {
-    int mid = lo + (hi - lo) / 2;    
+int partitionHoare(int a[], int lo, int hi, long long &cmp) 
+{
+    int mid = lo + (hi - lo) / 2;
     int pivot = a[mid];
 
-    swap(a[mid], a[hi]);
+    {
+        int tmp  = a[mid];
+        a[mid]   = a[hi];
+        a[hi]    = tmp;
+    }
 
-    int i = lo;                      
-    for (int j = lo; j < hi; ++j) {
+    int i = lo;
+    for (int j = lo; j < hi; ++j) 
+    {
         ++cmp;
-        if (a[j] <= pivot) {
-            swap(a[i], a[j]);
+        if (a[j] <= pivot) 
+        {
+            int tmp = a[i];
+            a[i]    = a[j];
+            a[j]    = tmp;
             ++i;
         }
     }
 
-    swap(a[i], a[hi]);
+    {
+        int tmp = a[i];
+        a[i]    = a[hi];
+        a[hi]   = tmp;
+    }
 
     return i;
 }
 
-void quickSortHoare(int a[], int lo, int hi, long long &cmp) {
+void quickSortHoare(int a[], int lo, int hi, long long &cmp) 
+{
     if (lo >= hi) return;
 
     int p = partitionHoare(a, lo, hi, cmp);
