@@ -13,7 +13,7 @@
 * @param size - размер массива.
 * @return Возвращает новый массив с нулем.
 */
-int* array_min(const int* const array, const size_t size);
+int* array_min(const int* array, const size_t size);
 
 /*
 * @brief Создать копию исходного массива.
@@ -30,7 +30,7 @@ int* copy_array(const int* array, const size_t size);
 * @param size1 - размер нового массива без отрешенных чисел.
 * @return Возвращает новый массив по условию.
 */
-int* array_first_last_number(const int* array, const size_t size, size_t size1);
+int* array_first_last_number(const int* array, const size_t size, const size_t size1);
 
 /*
 * @brief Формирует новый массив A того же размера из исходного по правилам.
@@ -175,7 +175,9 @@ int main(void)
     }
     else
     {
-        printf("[]\n");
+        perror("Ошибка: Пустой массив");
+        free(array);
+        return 1;
     }
 
     printf("3) Массив A, сформированный из исходного по правилам:\n");
