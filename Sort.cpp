@@ -1,24 +1,24 @@
 #include <iostream>
-#include <vector>      
+#include <vector>
 #include <algorithm>
 #include <random>
 using namespace std;
 
-long long insertionSort(vector<int>& a) 
+long long insertionSort(vector<int>& a)
 {
     long long cmp = 0;
-    const int n = static_cast<int>(a.size());   
-    for (int i = 1; i < n; ++i) 
+    const int n = static_cast<int>(a.size());
+    for (int i = 1; i < n; ++i)
     {
         const int key = a[i];
 
         int lo = 0, hi = i;
-        while (lo < hi) 
+        while (lo < hi)
         {
             const int mid = lo + (hi - lo) / 2;
             ++cmp;
             if (a[mid] <= key) lo = mid + 1;
-            else  hi = mid;
+            else hi = mid;
         }
 
         for (int j = i - 1; j >= lo; --j)
@@ -29,17 +29,17 @@ long long insertionSort(vector<int>& a)
     return cmp;
 }
 
-long long selectionSort(vector<int>& a) 
+long long selectionSort(vector<int>& a)
 {
     long long cmp = 0;
-    const int n = static_cast<int>(a.size());   
-    for (int i = 0; i < n - 1; ++i) 
+    const int n = static_cast<int>(a.size());
+    for (int i = 0; i < n - 1; ++i)
     {
         int minIdx = i;
-        for (int j = i + 1; j < n; ++j) 
+        for (int j = i + 1; j < n; ++j)
         {
             ++cmp;
-            if (a[j] < a[minIdx]) 
+            if (a[j] < a[minIdx])
             {
                 minIdx = j;
             }
@@ -47,88 +47,99 @@ long long selectionSort(vector<int>& a)
         if (minIdx != i)
         {
             swap(a[i], a[minIdx]);
-        } 
+        }
     }
     return cmp;
 }
 
-int partitionHoare(vector<int>& a, int lo, int hi, long long &cmp) 
+vector<int> partitionHoare(vector<int>& a, const size_t n, vector<int>& result, long long& cmp)
 {
-    const int mid = lo + (hi - lo) / 2;
-    const int pivot = a[mid];
+    if (n == 0) return result;
 
+    int refElIndex = (n - 1) / 2;
+    int refEl = a[refElIndex];
+    int i = 0;
+    int nLeft = 0;
+    int nRight = 0;
+    vector<int> leftArr;
+    vector<int> rightArr;
+    do
     {
-        int tmp = a[mid];
-        a[mid] = a[hi];
-        a[hi] = tmp;
-    }
-
-    int i = lo;
-    for (int j = lo; j < hi; ++j) 
-    {
-        ++cmp;
-        if (a[j] <= pivot) 
+        if (i == refElIndex)
         {
-            int tmp = a[i];
-            a[i] = a[j];
-            a[j] = tmp;
-            ++i;
+            i++;
+            continue;
         }
-    }
+        ++cmp;
+        if (a[i] <= refEl)
+        {
+            leftArr.push_back(a[i]);
+            nLeft++;
+        }
+        else
+        {
+            rightArr.push_back(a[i]);
+            nRight++;
+        }
+        i++;
+    } while (i < static_cast<int>(n));
+
+    if (nLeft > 1)
     {
-        int tmp = a[i];
-        a[i] = a[hi];
-        a[hi] = tmp;
+        partitionHoare(leftArr, nLeft, result, cmp);
     }
-
-    return i;
+    else if (nLeft == 1)
+    {
+        result.push_back(leftArr[nLeft - 1]);
+    }
+    result.push_back(refEl);
+    if (nRight > 1)
+    {
+        partitionHoare(rightArr, nRight, result, cmp);
+    }
+    else if (nRight == 1)
+    {
+        result.push_back(rightArr[nRight - 1]);
+    }
+    return result;
 }
 
-void quickSortHoare(vector<int>& a, int lo, int hi, long long &cmp) 
-{
-    if (lo >= hi) return;
-
-    const int p = partitionHoare(a, lo, hi, cmp);
-
-    quickSortHoare(a, lo, p - 1, cmp);
-    quickSortHoare(a, p + 1, hi, cmp);   
-}
-
-
-vector<int> generateArray(const int n, const int minVal, const int maxVal) 
+vector<int> generateArray(const int n, const int minVal, const int maxVal)
 {
     vector<int> a;
-    a.reserve(n);                         
+    a.reserve(n);
     random_device rd;
     mt19937 gen(rd());
     uniform_int_distribution<int> dist(minVal, maxVal);
     for (int i = 0; i < n; ++i)
-        a.push_back(dist(gen));            
-    return a;                              
+        a.push_back(dist(gen));
+    return a;
 }
 
-void printArray(const vector<int>& a, const int limit = 30) 
+void printArray(const vector<int>& a, const int limit = 30)
 {
-    const int n = static_cast<int>(a.size());   
-    if (n <= limit) 
+    const int n = static_cast<int>(a.size());
+    if (n <= limit)
     {
-        for (int x : a) cout << x << " ";       
+        for (int x : a) cout << x << " ";
         cout << "\n";
-    } 
-    else 
+    }
+    else
     {
         for (int i = 0; i < limit; ++i) cout << a[i] << " ";
         cout << "... (всего " << n << " элементов)\n";
     }
 }
 
-int main() 
+int main()
 {
+    setlocale(LC_ALL, "Russian");
+
     int n;
     cout << "Введите количество элементов n: ";
     cin >> n;
 
-    if (n <= 0) 
+    if (n <= 0)
     {
         cout << "n должно быть положительным\n";
         return 1;
@@ -141,23 +152,25 @@ int main()
     cout << "\nИсходный массив: ";
     printArray(original);
 
-
     vector<int> work = original;
     long long cmpInsertion = insertionSort(work);
 
-    work = original;                       
+    work = original;
     long long cmpSelection = selectionSort(work);
 
-    work = original;                       
+    work = original;
+    vector<int> result;
     long long cmpQuick = 0;
-    quickSortHoare(work, 0, static_cast<int>(work.size()) - 1, cmpQuick);
+    partitionHoare(work, work.size(), result, cmpQuick);
+    
 
     cout << "\nОтсортированный массив: ";
-    printArray(work);
+    printArray(result);
 
-    cout << "Вставками:  сравнений = " << cmpInsertion << "\n";
-    cout << "Перебором:  сравнений = " << cmpSelection << "\n";
-    cout << "Хоара:      сравнений = " << cmpQuick     << "\n";
+    cout << "\nКоличество сравнений:\n";
+    cout << "Вставками: " << cmpInsertion << "\n";
+    cout << "Перебором: " << cmpSelection << "\n";
+    cout << "Хоара: " << cmpQuick << "\n";
 
     return 0;
 }
