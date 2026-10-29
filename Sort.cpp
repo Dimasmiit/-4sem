@@ -21,10 +21,8 @@ long long insertionSort(vector<int>& a)
             else hi = mid;
         }
 
-        for (int j = i - 1; j >= lo; --j)
-            a[j + 1] = a[j];
-
-        a[lo] = key;
+        a.erase(a.begin() + i);         
+        a.insert(a.begin() + lo, key); 
     }
     return cmp;
 }
@@ -65,6 +63,7 @@ vector<int> partitionHoare(vector<int>& a, const size_t n, vector<int>& result, 
     vector<int> rightArr;
     do
     {
+        ++cmp;
         if (i == refElIndex)
         {
             i++;
